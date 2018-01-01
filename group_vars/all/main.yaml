@@ -21,7 +21,8 @@ aws_environment: test
 # set_vpc_cidr_block: 10.0.0.0/16
 
 # Definition of all security group.
-# Insted of defining all security groups here I rather recommend to define own yml files for delete, modify and creation of security group and using the option --extra-vars.
+# Insted of defining all security groups here I rather recommend to define own yml files for delete, modify and creation 
+# of security group and using the option --extra-vars.
 #
 # Structure for security group:
 # Example:
@@ -39,7 +40,7 @@ aws_environment: test
 #         to_port: 65535
 #         cidr_ip: 0.0.0.0/
 #
-# If 'in_rule' and/or 'out_rule' is not provided. Security group will still be created, just with empty ruleset.
+# If 'in_rule' and/or 'out_rule' is not provided. Security group will still be created, just with an empty ruleset.
 #
 #
 security_group:
