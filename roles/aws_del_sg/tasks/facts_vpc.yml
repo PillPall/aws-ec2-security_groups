@@ -1,0 +1,28 @@
+---
+- name: Gather facts about configured VPC
+  ec2_vpc_net_facts:
+    region: "{{ aws_region }}"
+    filters:
+        "tag:Name": "vpc_{{ company }}"
+        "tag:Environment": "vpc_{{ aws_environment }}"
+  register: vpc_facts
+  when: set_vpc_id is undefined
+
+- set_fact:
+    set_vpc_id: "{{ item.id }}"
+  with_items:
+   - "{{ vpc_facts.vpcs }}"
+
+- name: Gather facts about configured VPC
+  ec2_vpc_net_facts:
+    region: "{{ aws_region }}"
+    filters:
+      vpc-id: "{{ set_vpc_id }}"
+  register: vpc_id_facys
+  when: set_vpc_cidr_block is undefined
+
+- set_fact:
+    set_vpc_cidr_block: "{{ item.cidr_block }}"
+  with_items:
+   - "{{ vpc_facts.vpcs }}"
+  when: set_vpc_cidr_block is undefined

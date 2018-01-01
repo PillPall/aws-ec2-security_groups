@@ -1,0 +1,28 @@
+---
+- name: Gather facts about exisiting SG Groups
+  ec2_group_facts:
+    filters:
+      group-name: "vpc_{{ company }}_ENV_{{ aws_environment }}_sg_{{ item.name }}"
+      vpc-id: "{{ set_vpc_id }}"
+  register: ec2_group_facts_sg
+  with_items:
+    - "{{ security_group }}"
+
+- name: fail if security group not exist
+  fail: msg="At least one defined security group do not exist. Can not modify not exisiting security group. Please use role aws_create_sg to create a security group"
+  with_items:
+    - "{{ ec2_group_facts_sg.results }}"
+  when: item.security_groups is equalto []
+
+- name: Modify security group
+  ec2_group:
+    name: "vpc_{{ company }}_ENV_{{ aws_environment }}_sg_{{ item.name }}"
+    description: 'an example EC2 group'
+    vpc_id: "{{ set_vpc_id }}"
+    region: "{{ aws_region }}"
+    state: present
+    rules: "{{ item.in_rule |default () }}"
+    rules_egress: "{{ item.out_rule | default () }}"
+  register: created_sg
+  with_items:
+    - "{{ security_group }}"

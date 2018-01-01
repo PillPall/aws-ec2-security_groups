@@ -1,0 +1,85 @@
+---
+# AWS specific variables
+aws_region: ap-southeast-2
+
+# General Data to create / delete the network configuration
+# Company Name
+company: ZZZ_Example
+
+# Network Environment ex.: production
+aws_environment: test
+
+# VPC ID for managing the security groups.
+# Optional option, if not set ansible will lookup the VPC-ID using company & aws_envrionment variable.
+#
+# set_vpc_id: vpc-123456
+
+# VPC CIDR Block variable.
+# Optional option, if not ste ansible will lookup the VPC CIDR Block by using the set_vpc_id variable.
+# This variable can be used to build the ruleset.
+#
+# set_vpc_cidr_block: 10.0.0.0/16
+
+# Definition of all security group.
+# Insted of defining all security groups here I rather recommend to define own yml files for delete, modify and creation of security group and using the option --extra-vars.
+#
+# Structure for security group:
+# Example:
+#
+# secourity_group:
+#   - name: "NAME"
+#     in_rule:
+#       - proto: [tcp / udp / icmp / -1]
+#         from_port: 1
+#         to_port: 65535
+#         cidr_ip: 0.0.0.0/
+#     out_rule:
+#       - proto: [tcp / udp / icmp / -1]
+#         from_port: 1
+#         to_port: 65535
+#         cidr_ip: 0.0.0.0/
+#
+# If 'in_rule' and/or 'out_rule' is not provided. Security group will still be created, just with empty ruleset.
+#
+#
+security_group:
+  - name: ROOT
+    in_rule:
+      - proto: tcp
+        from_port: 22
+        to_port: 90
+        cidr_ip: 0.0.0.0/0
+      - proto: udp
+        from_port: 123
+        to_port: 123
+        cidr_ip: 0.0.0.0/0
+      - proto: icmp
+        from_port: -1
+        to_port: -1
+        cidr_ip: 0.0.0.0/0
+    out_rule:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: "{{ set_vpc_cidr_block }}"
+  - name: APP
+    in_rule:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: udp
+        from_port: 123
+        to_port: 123
+        cidr_ip: 0.0.0.0/0
+      - proto: icmp
+        from_port: -1
+        to_port: -1
+        cidr_ip: 0.0.0.0/0
+    out_rule:
+      - proto: -1
+        cidr_ip: 0.0.0.0/0
