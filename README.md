@@ -29,7 +29,7 @@ Deletion:
   - Define VPC network adress block (optional)
   - Define Security groups 
 
-Security groups can be defined in main.yml or as extra yaml file with the option --extra-vars.
+Security groups can be defined in 'group_vars/all/main.yml' or as extra yaml file with the option --extra-vars.
 
 To create a security group
 ```
