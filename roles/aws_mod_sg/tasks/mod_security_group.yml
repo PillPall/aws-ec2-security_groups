@@ -23,6 +23,6 @@
     state: present
     rules: "{{ item.in_rule |default () }}"
     rules_egress: "{{ item.out_rule | default () }}"
-  register: created_sg
+  register: mod_sg
   with_items:
     - "{{ security_group }}"

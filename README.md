@@ -27,7 +27,7 @@ Deletion:
   - Define Network Environment example: Test, DEV
   - Define VPC ID (optional)
   - Define VPC network adress block (optional)
-  - Define Security groups 
+  - Define Security groups and rules
 
 Security groups can be defined in main.yml or as extra yaml file with the option --extra-vars.
 
@@ -39,6 +39,10 @@ To modify a security group
 ```
 # ansible-playbook aws_mod_sg.yml (--extra-vars "@mod_sg.yml)
 ```
+To delete a security group
+```
+# ansible-playbook aws_del_sg.yml (--extra-vars "@mod_sg.yml)
+```
 
 Important notes:
 
@@ -46,8 +50,9 @@ Important notes:
 ```
 "vpc_{{ company }}_ENV_{{ aws_environment }}_sg_{{ item.name }}" 
 ```
-* During creation of a security group Ansible test if a security group with the same name already exist and exit with an error
-* During modifying a security group Ansible tests if a security group exist, if not it will fai
+* During creation of a security group Ansible checks if a security group with the same name already exist and exit with an error
+* During modifying of a security group Ansible checks if a security group exists looking up for the security group name
+* During deletion of a securitu group Ansible checks if the defined security groups exists looking up for the security group name
 
 # TO-DOs:
 [TO-DOs](./TODO.md)

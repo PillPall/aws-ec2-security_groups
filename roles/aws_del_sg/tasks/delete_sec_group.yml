@@ -7,31 +7,20 @@
   register: ec2_group_facts_sg
   with_items:
     - "{{ security_group }}"
-  ignore_errors: yes
 
-- name: fail if security group exist
-  fail: msg="At least one defined security group exist. Can not modify exisiting security group. Please use role aws_mod_sg or aws_del_sg to modify/ delete a security group"
-  with_nested:
-   - "{{ ec2_group_facts_sg.results }}"
-   - "{{ security_group }}"
-  when: item[1].name in "{{ item[0].security_groups | map(attribute='group_name')| list }}"
+- name: fail if security group not exist
+  fail: msg="At least one defined security group do not exist. Can not Delete not exisiting security group. Please use role aws_create_sg to create a security group"
+  with_items:
+    - "{{ ec2_group_facts_sg.results }}"
+  when: item.security_groups is equalto []
 
-- name: Create security group
+- name: Absent security group
   ec2_group:
     name: "vpc_{{ company }}_ENV_{{ aws_environment }}_sg_{{ item.name }}"
     description: 'an example EC2 group'
     vpc_id: "{{ set_vpc_id }}"
     region: "{{ aws_region }}"
-    state: present
-    rules: "{{ item.in_rule |default () }}"
-    rules_egress: "{{ item.out_rule | default () }}"
-  register: created_sg
+    state: absent
+  register: del_sg
   with_items:
     - "{{ security_group }}"
-
-- set_fact:
-    "sg_{{ item[1].name }}_id": "{{ item[0].group_id }}"
-  with_nested:
-   - "{{ created_sg.results }}"
-   - "{{ security_group }}"
-  when: item[1].name in item[0].group_name
