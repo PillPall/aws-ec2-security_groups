@@ -14,7 +14,6 @@ Deletion:
 * Ansible 2.4
 * Python 2.7.10
 * AWS Account and configured Access Key and Secret Access Key
-* EC2.PY & EC2.INI are configured and loaded ( see https://github.com/ansible/ansible/tree/devel/contrib/inventory )
 * Set following AWS environment variable:
   - AWS_ACCESS_KEY_ID
   - AWS_SECRET_ACCESS_KEY
